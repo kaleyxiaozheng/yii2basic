@@ -3,112 +3,32 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\EntryForm;
+use app\models\MyLoginForm;
+use app\models\Mylogin;
 
 class LoginController extends Controller
 {
-    public function actionEntry()
-    {
-        $model = new EntryForm();
+    public function actionLogin(){
 
-        if($model->load(Yii::$app->request->post()) && $model->validate()){
-            return $this->render('entry-confirm', ['model' => $model]);
+        Yii::info("Username: ");
+        $model = new Mylogin();
+        Yii::info(Yii::$app->request->post('Mylogin'));
+        $user = Yii::$app->request->post('Mylogin');
+        Yii::info($user);
+        $m = Mylogin::find()->where(['username' => $user["username"], 'password' => $user["password"]]);
+
+        Yii::info($m->count());
+
+        if ($m->count() > 0){
+            Yii::info("I am here");
+            // do something
+            $model->username = $m->one()->username;
+            $model->password = $m->one()->password;
+            return $this->render('login-confirm', ['form' => $model]);
         } else {
-            return $this->render('entry', ['model' => $model]);
+            // either the page is initially displayed or there is some validation error
+            return $this->render('login', ['model' => $model]);
         }
-    }
-
-    public function actionSay($message = 'Hello')
-    {
-        return $this->render('say', ['message' => $message]);
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
-
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->render('message');
-        }
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
+    }     
 }
