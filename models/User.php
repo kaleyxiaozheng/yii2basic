@@ -39,7 +39,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     /**
      * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+   public static function findIdentityByAccessToken($token, $type = null)
     {
         foreach (self::$users as $user) {
             if ($user['accessToken'] === $token) {
@@ -86,7 +86,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     /**
      * @inheritdoc
      */
-    public function validateAuthKey($authKey)
+   public function validateAuthKey($authKey)
     {
         return $this->authKey === $authKey;
     }
@@ -97,7 +97,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
+   public function validatePassword($password)
     {
         return $this->password === $password;
     }

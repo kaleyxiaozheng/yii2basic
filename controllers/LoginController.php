@@ -10,14 +10,23 @@ use app\models\Mylogin;
 class LoginController extends Controller
 {
     public function actionLogin(){
-        $validate = new MyLoginForm();
+       // $validate = new Mylogin();
         
-        Yii::info("Username: ");
+        //Yii::info("Username: ");
         $model = new Mylogin();
-        Yii::info(Yii::$app->request->post('Mylogin'));
-        $user = Yii::$app->request->post('MyLoginForm');
-        Yii::info($user);
-        $m = Mylogin::find()->where(['username' => $user["username"], 'password' => $user["password"]]);
+       // Yii::info(Yii::$app->request->post('Mylogin'));
+       // $user = Yii::$app->request->post('MyLoginForm');
+        //Yii::info($user);
+        if(isset($_POST['Mylogin']))
+        {
+        echo '<pre>';
+        print_r($_POST);
+        echo '</pre>';
+        //Yii::app()->end();
+        //die();
+        }
+         return $this->render('login', array('model'=>$model));
+        /*$m = Mylogin::find()->where(['username' => $user["username"], 'password' => $user["password"]]);
 
         Yii::info($m->count());
 
@@ -28,7 +37,8 @@ class LoginController extends Controller
             $model->password = $m->one()->password;
             return $this->render('login-confirm', ['form' => $model]);
         } else {
-            return $this->render('login', ['model' => $validate]);
-        }
+            $
+           
+        }*/
     }     
 }

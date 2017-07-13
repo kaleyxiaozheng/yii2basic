@@ -7,7 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\models\Mylogin;
 use app\models\ContactForm;
 
 class SiteController extends Controller
@@ -15,45 +15,7 @@ class SiteController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
-
+   
     /**
      * Displays homepage.
      *
@@ -71,13 +33,43 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        //return $this->goHome();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        $model = new Mylogin();
+        
+           // die();    
+        
+        if (Yii::$app->request->post()) {
+            //return $this->goBack();
+            //var_dump($_POST);
+            
+            $username=$_POST['Mylogin']['username'];
+            $pass=$_POST['Mylogin']['password'];
+            //echo $username;
+           // echo $pass;
+            //$criteria=new CDbCriteria();
+           // $criteria->addCondition("username=".$username);
+           // $criteria->addCondition("password=".$pass);
+            $check=$model->findOne(array(
+                'username'=>$username,
+                'password'=>$pass
+                    ));
+            //var_dump($check);
+            //die();
+            if($check)
+                {
+                echo "loggedin";
+                die();
+                }
+             else
+             {
+                 return $this->render('login',array('model' =>$model));
+//                 echo 'Wrong Username or Password';
+//                 die();
+             }
         }
         return $this->render('login', [
             'model' => $model,

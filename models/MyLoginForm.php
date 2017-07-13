@@ -11,10 +11,11 @@ use yii\base\Model;
  * @property User|null $user This property is read-only.
  *
  */
-class MyLoginForm extends Model
+class MyLoginForm extends ActiveRecord
 {
     public $username;
     public $password;
+    private $checkresult;
 
     /**
      * @return array the validation rules.
@@ -58,18 +59,26 @@ class MyLoginForm extends Model
         }
         return false;
     }
+    
+    public function getCheckresult(){
+        return $this->checkresult;
+    }
+    
+    public function setCheckresult($checkresult){
+        $this->checkresult = $checkresult;
+    }
 
     /**
      * Finds user by [[username]]
      *
      * @return User|null
      */
-    public function getUser()
-    {
-        if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
-        }
-
-        return $this->_user;
-    }
+//    public function getUser()
+//    {
+//        if ($this->_user === false) {
+//            $this->_user = User::findByUsername($this->username);
+//        }
+//
+//        return $this->_user;
+//    }
 }
